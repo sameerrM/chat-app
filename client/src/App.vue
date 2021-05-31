@@ -1,5 +1,5 @@
 <template>
-<div class="container">
+<div class="container content-wrapper">
   <div class="row row-broken">
     <Sidebar :users="users" :username="username" />
     <ChatMessages
@@ -58,7 +58,13 @@ export default {
     },
     sendMessage(message, user) {
       this.socket.emit('msg', message, user);
+      this.updateScroll()
     },
+    updateScroll() {
+      let container = this.$el.querySelector(".chat-body");
+      console.log(container)
+      container.scrollTop = container.scrollHeight;
+    }
   },
   mounted() {
     this.username = prompt('Login', `${Math.random().toString(36).substring(7)}`)
@@ -71,9 +77,23 @@ export default {
 </script>
 
 <style lang="scss">
+body,html{
+  min-width: 100%;
+  min-height: 100%;
+  height: 100%;
+}
 body{
-  margin-top:20px;
   background:#eee;
+}
+
+#app {
+  height: 100%;
+}
+.content-wrapper{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .row.row-broken {
   padding-bottom: 0;
@@ -85,7 +105,9 @@ body{
   height: calc(100vh - 180px);
 }
 .decor-default {
+  height: 100%;
   background-color: #ffffff;
+  position: relative;
 }
 .chat-users h6 {
   font-size: 20px;
@@ -151,6 +173,11 @@ body{
 }
 
 /*****************CHAT BODY *******************/
+.chat-body{
+  height: calc(100% - 60px);
+  overflow-x: auto;
+  position: relative;
+}
 .chat-body h6 {
   font-size: 20px;
   margin: 0 0 20px;
@@ -255,32 +282,45 @@ body{
 }
 
 /**************ADD FORM ***************/
-.chat-body .answer-add {
+.decor-default .answer-add {
   clear: both;
-  position: relative;
-  margin: 20px -20px -20px;
-  padding: 20px;
-  background: #46be8a;
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  right: 0;
+  display: flex;
 }
-.chat-body .answer-add input {
-  border: none;
+.decor-default .answer-add button {
+  border-radius: 0;
+  height: 60px;
+  padding: 0 20px
+}
+.decor-default .answer-add input {
   background: none;
   display: block;
   width: 100%;
   font-size: 16px;
   line-height: 20px;
-  padding: 0;
+  height: 60px;
+  padding: 0 20px;
   color: #ffffff;
+  background: #46be8a;
+  border: 1px solid transparent;
+}
+.decor-default .answer-add input:focus-visible{
+  border: 1px solid #224838;
+  border-radius: 0;
+  outline: none;
 }
 .chat input {
   -webkit-appearance: none;
   border-radius: 0;
 }
-.chat-body .answer-add .answer-btn-1 {
+.decor-default .answer-add .answer-btn-1 {
   background: url("http://91.234.35.26/iwiki-admin/v1.0.0/admin/img/icon-40.png") 50% 50% no-repeat;
   right: 56px;
 }
-.chat-body .answer-add .answer-btn {
+.decor-default .answer-add .answer-btn {
   display: block;
   cursor: pointer;
   width: 36px;
@@ -289,7 +329,7 @@ body{
   top: 50%;
   margin-top: -18px;
 }
-.chat-body .answer-add .answer-btn-2 {
+.decor-default .answer-add .answer-btn-2 {
   background: url("http://91.234.35.26/iwiki-admin/v1.0.0/admin/img/icon-41.png") 50% 50% no-repeat;
   right: 20px;
 }

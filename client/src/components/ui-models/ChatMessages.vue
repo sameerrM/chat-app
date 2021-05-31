@@ -1,7 +1,7 @@
 <template>
   <div class="col-sm-9 col-xs-12 chat" style="overflow: hidden; outline: none;">
     <div class="col-inside-lg decor-default">
-      <div class="chat-body">
+      <div class="chat-body" ref="scrollDiv">
         <h6>#general</h6>
         <div class="answer"
              v-for="message in messages"
@@ -20,10 +20,11 @@
           </div>
           <div class="time">{{ message.time }}</div>
         </div>
-        <form class="answer-add" @submit.prevent="sendMessage">
-          <input placeholder="Write a message" v-model="msg">
-        </form>
       </div>
+      <form class="answer-add" @submit.prevent="sendMessage">
+        <input placeholder="Write a message" v-model="msg">
+        <button type="button" @click.prevent="sendMessage" :disabled="!msg" class="btn btn-primary">Send</button>
+      </form>
     </div>
   </div>
 </template>
