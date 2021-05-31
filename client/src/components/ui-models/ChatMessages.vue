@@ -6,7 +6,8 @@
       <ul class="chat-list">
         <li v-for="message in messages" :key="message.username">
           <h5>{{message.username}}</h5>
-          <p>{{message.msg}}</p>
+          <p :class="{'float-right': message.type === 0}">{{message.msg}}</p>
+          <p v-if="!message.msg"><b>{{message}}</b></p>
         </li>
       </ul>
     </div>
@@ -27,19 +28,20 @@
 <script>
 export default {
   name: "ChatMessages",
-  props: ['messages', 'username'],
+  props: ['messages', 'username', 'serverMessage'],
   data() {
     return {
       msg: ''
     }
   },
   methods: {
-    sendMessage() {
-      if(!this.msg) {
-        return
+    sendMessage: function () {
+      if (!this.msg) {
+        return;
       }
-      this.$emit('sendMessage', this.msg)
-      this.msg = ''
+
+      this.$emit('sendMessage', this.msg);
+      this.msg = "";
     }
   }
 }
@@ -58,6 +60,9 @@ export default {
       margin-top: 50px;
       list-style: none;
       padding: 0;
+      .float-right{
+        float: right;
+      }
     }
   }
 }

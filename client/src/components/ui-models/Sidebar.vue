@@ -6,29 +6,17 @@
     <hr>
     <ul class="nav nav-pills flex-column">
       <li class="nav-item">
-        <a href="#" class="nav-link active" aria-current="page">
-          General
-        </a>
-      </li>
-      <li>
-        <a href="#" class="nav-link text-white">
-          Random
-        </a>
+        General
       </li>
     </ul>
     <div class="justify-content-center d-flex align-items-center mb-3 mt-5 mb-md-0 me-md-auto text-white">
-      <span class="fs-5">Online people</span>
+      <span class="fs-5">Online people {{ users.length }} </span>
     </div>
     <hr>
     <ul class="nav nav-pills flex-column">
-      <li class="nav-item">
+      <li class="nav-item" v-for="user in users" :key="user">
         <a href="#" class="text-white text-decoration-none">
-          Alex
-        </a>
-      </li>
-      <li>
-        <a href="#" class="text-white text-decoration-none">
-          Rudolf
+          {{user}}
         </a>
       </li>
     </ul>
@@ -37,7 +25,8 @@
 
 <script>
 export default {
-  name: "Sidebar.vue"
+  name: "Sidebar.vue",
+  props: ['users']
 }
 </script>
 

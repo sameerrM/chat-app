@@ -1,86 +1,79 @@
 <template>
-  <div class="sidebar d-flex flex-column flex-shrink-0 p-3 text-white bg-dark">
-    <div class="justify-content-center d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white">
-      <span class="fs-5">Chat rooms</span>
-    </div>
-    <hr>
-    <ul class="nav nav-pills flex-column">
-      <li class="nav-item">
-        <a href="#" class="nav-link active" aria-current="page">
-          General
-        </a>
-      </li>
-      <li>
-        <a href="#" class="nav-link text-white">
-          Random
-        </a>
-      </li>
-    </ul>
-    <div class="justify-content-center d-flex align-items-center mb-3 mt-5 mb-md-0 me-md-auto text-white">
-      <span class="fs-5">Online people {{ users.length }} </span>
-    </div>
-    <hr>
-    <ul class="nav nav-pills flex-column">
-      <li class="nav-item" v-for="user in users" :key="user">
-        <a href="#" class="text-white text-decoration-none">
-          {{user}}
-        </a>
-      </li>
-    </ul>
-  </div>
-  <ChatMessages @sendMessage="this.sendMessage" :messages="messages" :username="username" />
+  <Sidebar :users="users" />
+  <ChatMessages
+      :serverMessage="serverMessage"
+      v-bind:messages="this.messages"
+      v-on:sendMessage="this.sendMessage"
+      :username="username"
+  />
 </template>
 
 <script>
 import io from 'socket.io-client';
-// import Sidebar from "./components/ui-models/Sidebar";
+import Sidebar from "./components/ui-models/Sidebar";
 import ChatMessages from "./components/ui-models/ChatMessages";
 
 export default {
-  name: 'App',
+  name: 'app',
   components: {
-    // Sidebar,
+    Sidebar,
     ChatMessages
   },
-  data () {
+  data() {
     return {
       username: "",
-      socket: io("http://localhost:3000"),
       messages: [],
-      users: []
+      socket: io("http://localhost:3000"),
+      users: [],
+      serverMessage: []
+      // status: 0
     }
   },
   methods: {
-    joinServer: function () {
+    // logIn(e) {
+    //   e.preventDefault()
+    //   this.username = Math.random().toString(36).substring(7)
+    //   this.joinServer()
+    //   this.status = 1
+    //   console.log(this.status)
+    // },
+    joinServer() {
       this.socket.on('loggedIn', data => {
         console.log(data)
         this.messages = data.messages;
         this.users = data.users;
-        this.socket.emit('newUser', this.username);
+        this.socket.emit('newuser', this.username);
       });
+      this.socket.on('join', serverMessage => {
+        console.log(serverMessage)
+      })
       this.listen();
     },
-    listen: function () {
+    listen() {
       this.socket.on('userOnline', user => {
         this.users.push(user);
       });
       this.socket.on('userLeft', user => {
         this.users.splice(this.users.indexOf(user), 1);
       });
-      this.socket.on('msg', message => {
+      this.socket.on('msg', (message) => {
+        this.messages.push(message);
+      });
+      this.socket.on('join', message => {
         this.messages.push(message);
       });
     },
-    sendMessage: function (message) {
+    sendMessage(message) {
+      console.log(message)
       this.socket.emit('msg', message);
-    }
+    },
   },
-  mounted: function () {
-    this.username = prompt("What is your username?", `${Math.random().toString(36).substring(7)}`);
+  mounted() {
+    this.username = prompt('Login', `${Math.random().toString(36).substring(7)}`)
     if (!this.username) {
       this.username = "Anonymous";
     }
-    this.joinServer();
+    this.joinServer()
   }
 }
 </script>
@@ -97,10 +90,5 @@ body,html {
   width: 100%;
   height: 100%;
   display: flex;
-}
-
-.sidebar{
-  width: 230px;
-  height: 100%;
 }
 </style>

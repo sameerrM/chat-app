@@ -10,8 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "*",
-    "socket.io": "*"
+    "express": "^4.17.1",
+    "socket.io": "^4.1.2"
   },
   "devDependencies": {
     "nodemon": "^1.18.7"

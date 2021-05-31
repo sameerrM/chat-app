@@ -1,14 +1,11 @@
-const express = require('express')
-const path = require('path')
-const http = require('http')
-const socketio = require('socket.io')
-const app = express()
-const server = http.createServer(app)
-const io = socketio(server)
-
-const publicDirectoryPath = path.join(__dirname, './client/public')
-console.log(publicDirectoryPath)
-app.use(express.static(publicDirectoryPath))
+const app = require("express")();
+const http = require("http").Server(app);
+const io = require("socket.io")(http, {
+    cors: {
+        origin: ['http://localhost:8080']
+    },
+    pingInterval: 6000
+});
 
 
 let users = []
@@ -21,22 +18,21 @@ io.on('connection', socket => {
         messages: messages
     });
 
-    socket.on('newUser', username => {
+    socket.on('newuser', (username) => {
         console.log(`${username} has arrived at the party.`);
         socket.username = username;
-
+        socket.broadcast.emit('join', `${socket.username} has joined the server!`)
         users.push(socket);
 
         io.emit('userOnline', socket.username);
-
-        socket.broadcast.emit('message', "Someone has joined the server!")
     });
 
-    socket.on('msg', msg => {
+    socket.on('msg', (msg, type) => {
         let message = {
             index: index,
             username: socket.username,
-            msg: msg
+            msg: msg,
+            type: 0
         }
 
         messages.push(message)
@@ -47,15 +43,18 @@ io.on('connection', socket => {
 
     })
 
+    console.log(users, messages)
+
     // Disconnect
     socket.on('disconnect', () => {
-        console.log(`${socket.username} has left the party.`);
-        io.emit('userLeft', socket.username)
         users.splice(users.indexOf(socket),1)
+        io.emit('userLeft', socket.username)
+        console.log(`${socket.username} has left the party.`);
     })
 })
 
-server.listen(3000, () => {
+http.listen(3000, () => {
     console.log("Listening on port %s", 3000);
 });
+
 
