@@ -1,26 +1,29 @@
 <template>
-  <div class="chat-content">
-    <div class="chat-messages">
-      <h4>Room: #general</h4>
-      <h6>Username: {{username}}</h6>
-      <ul class="chat-list">
-        <li v-for="message in messages" :key="message.username">
-          <h5>{{message.username}}</h5>
-          <p :class="{'float-right': message.username === username}">{{message.msg}}</p>
-          <p v-if="!message.msg"><b>{{message}}</b></p>
-        </li>
-      </ul>
-    </div>
-    <div class="chat-input mt-auto">
-      <form class="row g-3" @submit="sendMessage">
-        <div class="col-11">
-          <label for="message" class="visually-hidden">Message</label>
-          <input type="text" class="form-control" id="message" placeholder="Message" v-model="msg">
+  <div class="col-sm-9 col-xs-12 chat" style="overflow: hidden; outline: none;">
+    <div class="col-inside-lg decor-default">
+      <div class="chat-body">
+        <h6>#general</h6>
+        <div class="answer"
+             v-for="message in messages"
+             :key="message.username"
+             :class="{' right': message.username === username, ' left': message.username !== username}">
+          <div class="avatar" v-if="message.msg">
+            <img :src="message.avatar" alt="User name">
+            <div class="status online"></div>
+          </div>
+          <div class="name"><b>{{message.username}}</b></div>
+          <div class="text" v-if="message.msg">
+            {{message.msg}}
+          </div>
+          <div class="text" v-if="!message.msg">
+            {{message}}
+          </div>
+          <div class="time">{{ message.time }}</div>
         </div>
-        <div class="col-1 text-center">
-          <button type="submit" @click="sendMessage" class="btn btn-primary mb-3" :disabled="!msg">Send</button>
-        </div>
-      </form>
+        <form class="answer-add" @submit.prevent="sendMessage">
+          <input placeholder="Write a message" v-model="msg">
+        </form>
+      </div>
     </div>
   </div>
 </template>
@@ -28,10 +31,11 @@
 <script>
 export default {
   name: "ChatMessages",
-  props: ['messages', 'username', 'serverMessage'],
+  props: ['messages', 'username', "avatar"],
   data() {
     return {
-      msg: ''
+      msg: '',
+      user: {username: this.username, avatar: this.avatar}
     }
   },
   methods: {
@@ -40,30 +44,13 @@ export default {
         return;
       }
 
-      this.$emit('sendMessage', this.msg);
+      this.$emit('sendMessage', this.msg, this.user);
       this.msg = "";
     }
   }
 }
 </script>
 
-<style scoped lang="scss">
-.chat-content{
-  width: 100%;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  .chat-messages{
-    .chat-list{
-      width: 100%;
-      height: 100%;
-      margin-top: 50px;
-      list-style: none;
-      padding: 0;
-      .float-right{
-        float: right;
-      }
-    }
-  }
-}
+<style scoped>
+
 </style>

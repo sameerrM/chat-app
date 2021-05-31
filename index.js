@@ -14,24 +14,30 @@ let index = 0
 
 io.on('connection', socket => {
     socket.emit('loggedIn', {
-        users: users.map(s => s.username),
+        users: users,
         messages: messages
     });
 
-    socket.on('newuser', (username) => {
+    socket.on('newuser', (username, avatar) => {
         console.log(`${username} has arrived at the party.`);
-        socket.username = username;
-        socket.broadcast.emit('join', `${socket.username} has joined the server!`)
-        users.push(socket);
+        socket.broadcast.emit('join', `${username} has joined the server!`)
+        socket.username = username
+        socket.avatar = avatar
+        let user = {username: username, avatar: avatar}
+        users.push(user);
 
-        io.emit('userOnline', socket.username);
+        io.emit('userOnline', user);
     });
 
-    socket.on('msg', (msg) => {
+    socket.on('msg', (msg, user) => {
+        const today = new Date();
+        const time = today.getHours() + ":" + today.getMinutes()
         let message = {
             index: index,
             username: socket.username,
+            avatar: socket.avatar,
             msg: msg,
+            time: time
         }
 
         messages.push(message)
@@ -44,8 +50,8 @@ io.on('connection', socket => {
 
     // Disconnect
     socket.on('disconnect', () => {
-        users.splice(users.indexOf(socket),1)
-        io.emit('userLeft', socket.username)
+        users = users.filter(item => item.username !== socket.username)
+        io.emit('userLeft', users)
         console.log(`${socket.username} has left the party.`);
     })
 })
