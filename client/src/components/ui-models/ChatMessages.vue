@@ -6,7 +6,7 @@
       <ul class="chat-list">
         <li v-for="message in messages" :key="message.username">
           <h5>{{message.username}}</h5>
-          <p :class="{'float-right': message.type === 0}">{{message.msg}}</p>
+          <p :class="{'float-right': message.username === username}">{{message.msg}}</p>
           <p v-if="!message.msg"><b>{{message}}</b></p>
         </li>
       </ul>

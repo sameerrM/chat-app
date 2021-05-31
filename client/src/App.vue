@@ -1,7 +1,6 @@
 <template>
-  <Sidebar :users="users" />
+  <Sidebar :users="users" :username="username" />
   <ChatMessages
-      :serverMessage="serverMessage"
       v-bind:messages="this.messages"
       v-on:sendMessage="this.sendMessage"
       :username="username"
@@ -25,18 +24,9 @@ export default {
       messages: [],
       socket: io("http://localhost:3000"),
       users: [],
-      serverMessage: []
-      // status: 0
     }
   },
   methods: {
-    // logIn(e) {
-    //   e.preventDefault()
-    //   this.username = Math.random().toString(36).substring(7)
-    //   this.joinServer()
-    //   this.status = 1
-    //   console.log(this.status)
-    // },
     joinServer() {
       this.socket.on('loggedIn', data => {
         console.log(data)
@@ -44,9 +34,6 @@ export default {
         this.users = data.users;
         this.socket.emit('newuser', this.username);
       });
-      this.socket.on('join', serverMessage => {
-        console.log(serverMessage)
-      })
       this.listen();
     },
     listen() {
@@ -64,7 +51,6 @@ export default {
       });
     },
     sendMessage(message) {
-      console.log(message)
       this.socket.emit('msg', message);
     },
   },

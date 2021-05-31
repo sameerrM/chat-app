@@ -27,12 +27,11 @@ io.on('connection', socket => {
         io.emit('userOnline', socket.username);
     });
 
-    socket.on('msg', (msg, type) => {
+    socket.on('msg', (msg) => {
         let message = {
             index: index,
             username: socket.username,
             msg: msg,
-            type: 0
         }
 
         messages.push(message)
@@ -42,8 +41,6 @@ io.on('connection', socket => {
         index++;
 
     })
-
-    console.log(users, messages)
 
     // Disconnect
     socket.on('disconnect', () => {
