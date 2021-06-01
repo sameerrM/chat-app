@@ -1,7 +1,7 @@
 <template>
   <div class="col-sm-9 col-xs-12 chat" style="overflow: hidden; outline: none;">
     <div class="col-inside-lg decor-default">
-      <div class="chat-body" ref="scrollDiv">
+      <div class="chat-body" ref="container">
         <h6>#general</h6>
         <div class="answer"
              v-for="message in messages"
@@ -32,7 +32,7 @@
 <script>
 export default {
   name: "ChatMessages",
-  props: ['messages', 'username', "avatar"],
+  props: ['messages', 'username', "avatar", "scrollDiv"],
   data() {
     return {
       msg: '',
@@ -47,7 +47,19 @@ export default {
 
       this.$emit('sendMessage', this.msg, this.user);
       this.msg = "";
+      this.scrollToEnd()
+    },
+    scrollToEnd() {
+      let content = this.$refs.container;
+      content.scrollTop = content.scrollHeight;
     }
+  },
+  updated () {
+    this.scrollToEnd()
+  },
+
+  mounted () {
+    this.scrollToEnd()
   }
 }
 </script>
