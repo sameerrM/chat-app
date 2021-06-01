@@ -29,7 +29,7 @@ io.on('connection', socket => {
         io.emit('userOnline', user);
     });
 
-    socket.on('msg', (msg, user) => {
+    socket.on('msg', (msg) => {
         const today = new Date();
         const time = today.getHours() + ":" + today.getMinutes()
         let message = {
@@ -59,5 +59,4 @@ io.on('connection', socket => {
 http.listen(3000, () => {
     console.log("Listening on port %s", 3000);
 });
-
 

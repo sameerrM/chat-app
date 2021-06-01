@@ -49,7 +49,6 @@ export default {
       });
       this.socket.on('userLeft', user => {
         this.users = user
-        console.log(this.users)
       });
       this.socket.on('msg', (message) => {
         this.messages.push(message);
