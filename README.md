@@ -1,4 +1,8 @@
-# vue-chat-app Client
+# Simple Chat App created with Vue.js and Node.js(Socket.io)
+
+![Screenshot](Screenshot_1.png)
+
+# Client (Vue)
 
 ## Project setup
 ```
@@ -25,14 +29,19 @@ npm run test
 npm run lint
 ```
 
-# vue-chat-app Server
+# Server (Node)
 
 ## Project setup
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### Run server with nodemon
 ```
 npm run dev
+```
+
+### Run server with node
+```
+node index.js
 ```

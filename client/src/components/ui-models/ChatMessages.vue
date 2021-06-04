@@ -15,7 +15,7 @@
           <div class="text" v-if="message.msg">
             {{message.msg}}
           </div>
-          <div class="text" v-if="!message.msg">
+          <div class="join-message" v-if="!message.msg">
             {{message}}
           </div>
           <div class="time">{{ message.time }}</div>
